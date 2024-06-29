@@ -1,0 +1,29 @@
+.contact-form__heading {
+    text-align: center;
+    font-size: 25px;
+}
+  
+.attend-table {
+margin: 30px auto;
+width: 100%;
+text-align: center;
+}
+
+.attend-table__inner {
+width: 100%;
+}
+
+.attend-table__row {
+width: 20%;
+}
+
+.attend-table__header {
+font-weight: bold;
+border-top: 1px solid black;
+border-bottom: 1px solid black;
+padding: 15px;
+}
+  
+ 
+  
+  
