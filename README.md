@@ -15,6 +15,8 @@
 休憩開始を押すと休憩終了以外は押せない
 
 # テーブル設計
+![image](https://github.com/Chayney/attendance/assets/158685403/ab5f8bd1-796a-4b54-a6b1-1f6e57f15431)
+
 
 # ER図
 ![テーブルのリレーション図](https://github.com/Chayney/attendance/assets/158685403/08e6a1f4-9c36-4c1f-85d5-cc0383ec488d)
