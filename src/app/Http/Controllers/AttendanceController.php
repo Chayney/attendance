@@ -84,7 +84,7 @@ class AttendanceController extends Controller
         $breakIn = new Carbon($time->break_in);
         $breakOut = new Carbon($time->break_out);
 
-        // 稼働時間(second)
+        // 稼働時間(秒数)
         $stayTime = $startWork->diffInSeconds($now);
         $breakTime = $breakIn->diffInSeconds($breakOut); //休憩時間
         $workingSecond = $stayTime - $breakTime;
