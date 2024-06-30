@@ -17,6 +17,7 @@
 # テーブル設計
 
 # ER図
+![テーブルのリレーション図](https://github.com/Chayney/attendance/assets/158685403/08e6a1f4-9c36-4c1f-85d5-cc0383ec488d)
 
 # 環境構築
 
