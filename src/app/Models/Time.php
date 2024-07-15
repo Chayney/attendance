@@ -14,13 +14,25 @@ class Time extends Model
         'user_name', 
         'start_work', 
         'end_work',
-        'month',
-        'day',
         'break_in',
         'break_out',
+        'breaktime',
         'worktime',
-        'year'
+        'date'
     ];
+
+    protected $casts = [
+        'start_work' => 'datetime:H:i:s',
+        'end_work' => 'datetime:H:i:s',
+        'date' => 'datetime:Y-m-d'
+    ];
+
+    // public function scopeDateSearch($query, $date)
+    // {
+    //     if (!empty($date)) {
+    //         $query->where('date', $date);
+    //     }
+    // }
 
     public function time()
     {

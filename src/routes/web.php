@@ -18,14 +18,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [AttendanceController::class, 'index']);
 
     // 出退勤打刻
-    Route::post('/workin', [AttendanceController::class, 'workin']);
-    Route::post('/workout', [AttendanceController::class, 'workout']);
+    Route::post('/workin', [AttendanceController::class, 'store']);
+    Route::patch('/workout', [AttendanceController::class, 'workout']);
 
     // 休憩打刻
-    Route::post('/breakin', [AttendanceController::class, 'breakin']);
-    Route::post('/breakout', [AttendanceController::class, 'breakout']);
+    Route::patch('/breakin', [AttendanceController::class, 'breakin']);
+    Route::patch('/breakout', [AttendanceController::class, 'breakout']);
     
+    Route::get('/attendance', [AttendanceController::class, 'attend']);
+    Route::get('/before', [AttendanceController::class, 'before']);
+    Route::get('/after', [AttendanceController::class, 'after']);
     
 });
 
-Route::get('/attendance', [AttendanceController::class, 'attend']);
+

@@ -4,26 +4,86 @@
 }
   
 .attend-table {
-margin: 30px auto;
-width: 100%;
-text-align: center;
+    margin: 30px auto;
+    width: 85%;
+    text-align: center;
 }
 
 .attend-table__inner {
-width: 100%;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .attend-table__row {
-width: 20%;
+    width: 20%;
+}
+
+.attend-table__item {
+    border-collapse: collapse;
+    border-top: 1px solid #909090;
+    padding: 15px;
 }
 
 .attend-table__header {
-font-weight: bold;
-border-top: 1px solid black;
-border-bottom: 1px solid black;
-padding: 15px;
+    font-weight: bold;
+    border-top: 1px solid #909090;
+    border-bottom: 1px solid #909090;
+    padding: 15px;
 }
   
- 
-  
-  
+.paginationWrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 38px;
+    margin-bottom: 40px;
+}
+
+.paginationWrap ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+.paginationWrap ul.pagination li {
+    display: inline;
+    margin-right: 4px;
+}
+
+.paginationWrap ul.pagination li a {
+    color: #4b90f6;
+    padding: 8px 14px;
+    text-decoration: none;
+    background-color: white;
+    border: 1px solid #e1e7f0;
+}
+
+.paginationWrap ul.pagination li a.active {
+    background-color: #4b90f6;
+    color: white;
+    border: 40px;
+    width: 38px;
+    height: 38px;
+}
+
+.paginationWrap ul.pagination li a:hover:not(.active) {
+    background-color: #e1e7f0;
+    border-radius: 40px;
+}
+
+.contact-form__heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    vertical-align: middle;
+    margin: 0 50px;
+    height: 40px;
+    width: 50px;
+    background-color: white;
+    border-color: #214eb0;
+    border-radius: 3px;
+    color: #214eb0;
+    font-size: 30px;
+}

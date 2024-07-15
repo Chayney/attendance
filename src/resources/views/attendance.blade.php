@@ -8,7 +8,16 @@
 
 <div class="contact-form__content">
   <div class="contact-form__heading">
-    <h3>月日</h3>
+    <form action="/before" method="get">
+      @csrf
+      <input type="submit" name="updated_at" value="<">
+    </form>
+    <h3>{{ $times[0]['end_work']->format('Y-m-d') }}</h3>
+    {{-- <h3>{{ $today->format('Y-m-d') }}</h3> --}}
+    <form action="/after" method="get">
+      @csrf
+      <input type="submit" name="updated_at" value=">">
+    </form>
   </div>
   <div class="attend-table">
     <table class="attend-table__inner">
@@ -20,25 +29,28 @@
         <th class="attend-table__header">勤務時間</th>
       </tr>
       <tr class="attend-table__row">
-        @foreach ($attends as $attend)
+      @foreach ($times as $time)
         <td class="attend-table__item">
-          {{ $attend['time']['name'] }}
+          {{ $time['time']['name'] }}
         </td>
         <td class="attend-table__item">
-          {{ $attend['start_work'] }}
+          {{ $time['start_work']->format('H:i:s') }}
         </td>
         <td class="attend-table__item">
-          {{ $attend['end_work'] }}
+         
+          {{ $time['end_work']->format('H:i:s') }}
+          
         </td>
         <td class="attend-table__item">
-          {{ $attend['break_in'] }}
+          {{ $time['breaktime'] }}
         </td>
         <td class="attend-table__item">
-          {{ $attend['worktime'] }}
+          {{ $time['worktime'] }}
         </td>
       </tr>
       @endforeach
     </table>
+    {{ $times->links('pagination::custom')}}
   </div>
 </div>
 @endsection

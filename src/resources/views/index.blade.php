@@ -38,6 +38,7 @@
     </div>
     <div class="child__container">
       <form action="/workout" method="post">
+      @method('PATCH')
       @csrf
       <button type="submit" name="created_at" value="{{ old('created_at') }}">
         <p>勤務終了</p>
@@ -46,14 +47,17 @@
     </div>
     <div class="child__container">
       <form action="/breakin" method="post">
+      @method('PATCH')
       @csrf
-      <button type="submit" name="updated_at" value="{{ old('updated_at') }}">
+      <button type="submit" name="break_in" value="">
+      <input type="hidden" name='user_id' value="">
         <p>休憩開始</p>
       </button>
       </form>
     </div>
     <div class="child__container">
       <form action="/breakout" method="post">
+      @method('PATCH')
       @csrf
       <button type="submit" name="updated_at" value="{{ old('updated_at') }}">
         <p>休憩終了</p>
