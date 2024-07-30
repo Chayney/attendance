@@ -8,15 +8,14 @@
 
 <div class="contact-form__content">
   <div class="contact-form__heading">
-    <form action="/before" method="get">
+    <form action="/attendance" method="get">
       @csrf
-      <input type="submit" name="updated_at" value="<">
+      <button class="search_day" name="start_work"  value="{{ $yesterday->format('Y-m-d')}}"> &lt;</button>
     </form>
-    <h3>{{ $times[0]['end_work']->format('Y-m-d') }}</h3>
-    {{-- <h3>{{ $today->format('Y-m-d') }}</h3> --}}
-    <form action="/after" method="get">
+    <h3>{{ $today->format('Y-m-d') }}</h3>
+    <form action="/attendance" method="get">
       @csrf
-      <input type="submit" name="updated_at" value=">">
+      <button class="search_day" name="start_work"  value="{{ $tomorrow->format('Y-m-d') }}"> &gt;</button>
     </form>
   </div>
   <div class="attend-table">
@@ -50,7 +49,7 @@
       </tr>
       @endforeach
     </table>
-    {{ $times->links('pagination::custom')}}
+      {{ $times->appends(request()->query())->links('pagination::custom')}}
   </div>
 </div>
 @endsection

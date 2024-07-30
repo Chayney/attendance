@@ -82,4 +82,13 @@
   margin-top: 20px;
   text-align: center;
   color: gray;
+  font-weight: bold;
+}
+
+.form__input--text input {
+  background-color: #f2f2f2;
+}
+
+::placeholder {
+  font-weight: bold;
 }

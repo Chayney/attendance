@@ -26,8 +26,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/breakout', [AttendanceController::class, 'breakout']);
     
     Route::get('/attendance', [AttendanceController::class, 'attend']);
-    Route::get('/before', [AttendanceController::class, 'before']);
-    Route::get('/after', [AttendanceController::class, 'after']);
     
 });
 
