@@ -4,9 +4,21 @@
 # 作成した目的
 Laravel学習のまとめとして作成いたしました。提示された要件や成果物のイメージをもとに設計・コーディングを行いました。
 
+# アプリケーションURL
+デプロイしていないためURLはありません
+
+# 他のリポジトリ
+ありません
+
+# 使用技術
+1. PHP 7.4.9
+2. Laravel v8.83.8
+3. mysql:8.0.26
+4. Fortify
+
 # 機能一覧
 ・会員登録機能→名前、メールアドレス、パスワード、確認用パスワードが入力項目となっています。  
-・ログイン機能→メールアドレスとパスワードで認証出来、ログアウト機能もついています。(fortifyを使用して設定しています)  
+・ログイン機能→メールアドレスとパスワードで認証出来、ログアウト機能もついています。 
 ・勤怠の打刻機能→出勤、退勤、休憩開始、休憩終了の打刻が出来ます。  
 ・全ユーザーの日付別勤怠記録を閲覧することが出来ます。  
 ・ユーザー一覧(名前、メールアドレス)の閲覧が出来ます。  
@@ -20,25 +32,15 @@ Laravel学習のまとめとして作成いたしました。提示された要�
 # テーブル設計
 ![image](https://github.com/user-attachments/assets/207bdc9d-3f6c-4632-8464-f65932474554)
 
-
-
 # ER図
 ![image](https://github.com/user-attachments/assets/169dd77b-de9b-4a74-9295-e080c928adbe)
 
-
 # 環境構築
-
-## Dockerビルド
 1. docker-compose up -d -build
-
-## Laravel環境構築
 1. docker-compose exec php bash
 2. composer install
 3. .envで環境変数を変更
 4. php artisan key:generate
 5. php artisan migrate
 
-## 使用技術
-1. PHP 7.4.9
-2. Laravel v8.83.8
-3. mysql:8.0.26
+
