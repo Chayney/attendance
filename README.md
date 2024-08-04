@@ -23,6 +23,8 @@ Laravel学習のまとめとして作成いたしました。提示された要�
 
 # ER図
 ![テーブルのリレーション図](https://github.com/Chayney/attendance/assets/158685403/08e6a1f4-9c36-4c1f-85d5-cc0383ec488d)
+![image](https://github.com/user-attachments/assets/169dd77b-de9b-4a74-9295-e080c928adbe)
+
 
 # 環境構築
 
