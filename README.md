@@ -18,11 +18,11 @@ Laravel学習のまとめとして作成いたしました。提示された要�
 ・出勤中は何度でも休憩が打刻できます。  
 
 # テーブル設計
-![image](https://github.com/Chayney/attendance/assets/158685403/ab5f8bd1-796a-4b54-a6b1-1f6e57f15431)
+![image](https://github.com/user-attachments/assets/207bdc9d-3f6c-4632-8464-f65932474554)
+
 
 
 # ER図
-![テーブルのリレーション図](https://github.com/Chayney/attendance/assets/158685403/08e6a1f4-9c36-4c1f-85d5-cc0383ec488d)
 ![image](https://github.com/user-attachments/assets/169dd77b-de9b-4a74-9295-e080c928adbe)
 
 
