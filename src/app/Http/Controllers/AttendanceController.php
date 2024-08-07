@@ -17,7 +17,6 @@ class AttendanceController extends Controller
         // 勤務開始
         $user = Auth::user();
 
-        // 本日の日付のみを取得するために日付型で取得する
         $today = Carbon::now()->toDateString();
 
         // ログインユーザの本日の勤怠打刻記録を取得する
@@ -27,7 +26,7 @@ class AttendanceController extends Controller
         if (empty($time)) {
             // 出勤していない場合
             $time = true;
-    
+
         } else {
             // 出勤している場合
             $time = false;
@@ -62,7 +61,7 @@ class AttendanceController extends Controller
 
             // 本日出勤しているユーザが休憩開始を打刻しているか確認をする
             if ($todaystart == $todayend && empty($resting)) {
-                // 休憩開始を打刻していない場合もしくは休憩終了を打刻した場合(退勤打刻していない間は復活する)
+                // 休憩開始を打刻していない場合もしくは休憩終了を打刻した場合(退勤打刻していない間は再度打刻が可能)
                 $timeworking = true;
 
             } else {
@@ -79,11 +78,10 @@ class AttendanceController extends Controller
             $todaystart = new Carbon($stampworking->start_work);
             $todayend = new Carbon($stampworking->end_work);
 
-            if (!empty($restend) || $todaystart == $todayend) {
-                
+            if (!empty($restend) && $todaystart == $todayend) { 
                 $restend = true;
     
-            } else {
+            } else if (!empty($todaystart)) {
                 $restend = false;
             }
             
@@ -98,18 +96,14 @@ class AttendanceController extends Controller
             
     }
 
-    public function store(Request $request)
+    public function workin(Request $request)
     {
         $user = Auth::user();
         
         $today = Carbon::now()->toDateString();
 
-        $Today = new Carbon('today');
-
-        // 本日の勤怠を取得する
         $time = Time::where('user_id', $user->id)->where('date', $today)->first();
-        
-        // 本日の出勤打刻が無ければ登録する
+    
         if (empty($time)) {
             $time = Time::create([
                 'user_id' => $user->id,
@@ -118,7 +112,8 @@ class AttendanceController extends Controller
                 'end_work' => Carbon::now()
             ]);
 
-            return redirect('/')->with('message', '出勤を打刻しました');
+            return redirect('/');
+
         } 
           
     }
@@ -127,16 +122,14 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        $today = Carbon::now()->toDateString();
-
-        $time = Time::where('user_id', $user->id)->where('date', $today)->first();
-
+        $time = Time::where('user_id', $user->id)->latest()->first();
+        
         Rest::create([
             'time_id' => $time->id,
             'start_rest' => Carbon::now()
         ]);
     
-        return redirect('/')->with('message', '休憩開始しました');
+        return redirect('/');
 
     }
 
@@ -144,9 +137,7 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        $today = Carbon::now()->toDateString();
-
-        $time = Time::where('user_id', $user->id)->where('date', $today)->first();
+        $time = Time::where('user_id', $user->id)->latest()->first();
 
         $rest = Rest::where('time_id', $time->id)->latest()->first();
         
@@ -157,8 +148,8 @@ class AttendanceController extends Controller
         // 合算した休憩時間を整形する
         $breakTime = $restIn->diffInSeconds($restOut);
         $breakTimeSeconds = floor($breakTime % 60);
-        $breakTimeMinutes = floor($breakTime / 60);
-        $breakTimeHours = floor($breakTimeMinutes / 60);
+        $breakTimeMinutes = floor(($breakTime % 3600) / 60);
+        $breakTimeHours = floor($breakTime / 3600);
         $restTime = $breakTimeHours . ':' . $breakTimeMinutes . ':' . $breakTimeSeconds;
         
         $rest->update([
@@ -175,7 +166,7 @@ class AttendanceController extends Controller
             'breaktime' => $resttime->totalresttime
         ]);
 
-        return redirect('/')->with('message', '休憩終了しました');
+        return redirect('/');
 
     }
 
@@ -183,27 +174,25 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        $today = Carbon::now()->toDateString();
-
-        $time = Time::where('user_id', $user->id)->where('date', $today)->first();
-
+        $time = Time::where('user_id', $user->id)->latest()->first();
+        
         $rest = Rest::where('time_id', $time->id)->latest()->first();
 
-        // 現在時刻、出勤時刻を出力する
+        // 現在時刻と出勤時刻を出力する
         $now = new Carbon();
         $startWork = new Carbon($time->start_work);
-         
-        // 合計の休憩時間を算出する
+             
+        // 休憩時間の合計を算出する
         $rest = Rest::selectRaw('SEC_TO_TIME(SUM(TIME_TO_SEC(resttime))) as totalresttime')
             ->where('time_id', $time->id)->first();
         $resttime = $rest->totalresttime;
   
-        // 合算した勤務時間を整形する(休憩時間がない)
+        // 勤務時間を算出し整形する(休憩時間がない場合)
         if (empty($resttime)) {
             $stayTime = $startWork->diffInSeconds($now);
             $workingTimeSeconds = floor($stayTime % 60);
-            $workingTimeMinutes = floor($stayTime / 60);
-            $workingTimeHours = floor($workingTimeMinutes / 60);
+            $workingTimeMinutes = floor(($stayTime % 3600) / 60);
+            $workingTimeHours = floor($stayTime / 3600);
             $workTime = $workingTimeHours . ':' . $workingTimeMinutes . ':' . $workingTimeSeconds;
             
             $time->update([
@@ -211,32 +200,33 @@ class AttendanceController extends Controller
                 'worktime' => $workTime,
                 'breaktime' => '00:00:00'
             ]);
-
-            return redirect('/')->with('message', '退勤打刻しました');
+            
+            return redirect('/');
 
         } 
         
-        // 勤務時間との差分を計算するため算出した合計の休憩時間を秒数に変換する
+        // 勤務時間と休憩時間の差分を計算し実働時間を求めるため、合計された休憩時間を取得しその時間を秒数に変換する
         $carbontime = Carbon::createFromFormat('H:i:s', $resttime);
         $seconds = $carbontime->hour * 3600 + $carbontime->minute * 60 + $carbontime->second;
 
-        // 合算した勤務時間を整形する(実働時間)
+        // 勤務時間を算出し整形する(実働時間)
         $stayingTime = $startWork->diffInSeconds($now); //休憩時間を含めた1日の勤務時間
         $stayTime = $stayingTime - $seconds; //休憩時間を除いた実働時間
         $workingTimeSeconds = floor($stayTime % 60);
-        $workingTimeMinutes = floor($stayTime / 60);
-        $workingTimeHours = floor($workingTimeMinutes / 60);
+        $workingTimeMinutes = floor(($stayTime % 3600) / 60);
+        $workingTimeHours = floor($stayTime / 3600);
         $workTime = $workingTimeHours . ':' . $workingTimeMinutes . ':' . $workingTimeSeconds;
         
         $time->update([
             'end_work' => Carbon::now(),
             'worktime' => $workTime
         ]);
-
-        return redirect('/')->with('message', '退勤打刻しました');
+        
+        return redirect('/');
             
     }
 
+    // 日付別勤怠一覧
     public function attend(Request $request)
     {
         $user = Auth::user();
@@ -257,6 +247,24 @@ class AttendanceController extends Controller
 
         return view('attendance', compact('times', 'today', 'yesterday', 'tomorrow'));
 
+    }
+
+    // ユーザー一覧
+    public function userlist()
+    {
+        $users = User::select('id', 'name', 'email')->paginate(5);
+
+        return view('userlist', compact('users'));
+    }
+
+    // ユーザー別勤怠一覧
+    public function userattend()
+    {
+        $user = Auth::user();
+
+        $times = Time::where('user_id', $user->id)->paginate(5);
+
+        return view('userattend', compact('times'));
     }
 
 }

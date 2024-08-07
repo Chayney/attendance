@@ -27,13 +27,6 @@ class Time extends Model
         'date' => 'datetime:Y-m-d'
     ];
 
-    // public function scopeDateSearch($query, $date)
-    // {
-    //     if (!empty($date)) {
-    //         $query->where('date', $date);
-    //     }
-    // }
-
     public function time()
     {
         return $this->belongsTo(User::class, 'user_id');

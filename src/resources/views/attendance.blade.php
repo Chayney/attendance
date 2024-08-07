@@ -36,9 +36,7 @@
           {{ $time['start_work']->format('H:i:s') }}
         </td>
         <td class="attend-table__item">
-         
           {{ $time['end_work']->format('H:i:s') }}
-          
         </td>
         <td class="attend-table__item">
           {{ $time['breaktime'] }}
