@@ -28,6 +28,11 @@ Laravel学習のまとめとして作成いたしました。提示された要�
 ・日付を跨ぐと翌日の出勤操作に切り替わります。   
 ・出勤中は何度でも休憩が打刻できます。  
 
+# アカウントの種類(テストユーザーが1アカウントあります。)
+・ユーザー名: testuser  
+・メールアドレス: test@example.com  
+・パスワード: password
+
 # テーブル設計
 ![image](https://github.com/user-attachments/assets/207bdc9d-3f6c-4632-8464-f65932474554)
 
