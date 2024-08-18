@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attend.css') }}">
+<link rel="stylesheet" href="{{ asset('css/userlist.css') }}">
 @endsection
 
 @section('content')
@@ -15,9 +15,8 @@
         <th class="attend-table__header">名前</th>
         <th class="attend-table__header">メールアドレス</th>
       </tr>
-      <tr class="attend-table__row">
       @foreach ($users as $user)
-      <form action="/userlist" method="get">
+      <tr class="attend-table__row">
         <td class="attend-table__item">
           {{ $user['name'] }}
         </td>
@@ -25,8 +24,6 @@
           {{ $user['email'] }}
         </td>  
       </tr>
-      <input type="hidden" name="id" value="{{ $user['id'] }}">
-      </form>
       @endforeach
     </table>
       {{ $users->appends(request()->query())->links('pagination::custom')}}

@@ -9,12 +9,10 @@
 <div class="contact-form__content">
   <div class="contact-form__heading">
     <form action="/attendance" method="get">
-      @csrf
       <button class="search_day" name="start_work"  value="{{ $yesterday->format('Y-m-d')}}"> &lt;</button>
     </form>
     <h3>{{ $today->format('Y-m-d') }}</h3>
     <form action="/attendance" method="get">
-      @csrf
       <button class="search_day" name="start_work"  value="{{ $tomorrow->format('Y-m-d') }}"> &gt;</button>
     </form>
   </div>

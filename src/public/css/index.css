@@ -19,28 +19,13 @@
     padding: 10px;
 }
 
-.child__container button  {
-    text-align: center;
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.alert--success {
-    font-size: 20px;
-    background-color: aqua;
-    font-weight: bold;
-}
-
-.alert--danger {
-    font-size: 20px;
-    background-color: red;
-    font-weight: bold;
-}
-
 .child__container button {
     border: none;
     outline: none;
     background: transparent;
     display: block;
     margin: 40px auto;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
 }

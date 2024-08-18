@@ -21,7 +21,7 @@ class AttendanceController extends Controller
 
         // ログインユーザの本日の勤怠打刻記録を取得する
         $time = Time::where('user_id', $user->id)->where('date', $today)->first();
-        
+       
         // 本日の出勤を確認する
         if (empty($time)) {
             // 出勤していない場合
@@ -114,7 +114,7 @@ class AttendanceController extends Controller
 
             return redirect('/');
 
-        } 
+        }
           
     }
 
@@ -141,7 +141,6 @@ class AttendanceController extends Controller
 
         $rest = Rest::where('time_id', $time->id)->latest()->first();
         
-        // 休憩開始と休憩終了時刻を出力する
         $restIn = new Carbon($rest->start_rest);
         $restOut = new Carbon($rest->end_rest);
 
@@ -161,7 +160,7 @@ class AttendanceController extends Controller
         $resttime = Rest::selectRaw('SEC_TO_TIME(SUM(TIME_TO_SEC(resttime))) as totalresttime')
             ->where('time_id', $time->id)->first();
 
-        // 合計値が変更するたびに休憩時間を更新する
+        // 合計値が加算されるたびに休憩時間を更新する
         $time->update([
             'breaktime' => $resttime->totalresttime
         ]);
@@ -178,11 +177,87 @@ class AttendanceController extends Controller
         
         $rest = Rest::where('time_id', $time->id)->latest()->first();
 
-        // 現在時刻と出勤時刻を出力する
         $now = new Carbon();
         $startWork = new Carbon($time->start_work);
-             
-        // 休憩時間の合計を算出する
+
+        // 出勤中に日を跨いだ時の処理
+        if (!($startWork == $time->end_work && $startWork->isSameDay($now))) {
+            $timework = Time::where('user_id', $user->id)->latest()->first();
+
+            $rest = Rest::selectRaw('SEC_TO_TIME(SUM(TIME_TO_SEC(resttime))) as totalresttime')
+            ->where('time_id', $timework->id)->first();
+            $resttime = $rest->totalresttime;
+
+            $endWork = Carbon::parse($timework->end_work);
+            $endwork = $endWork->endOfDay();
+
+            if (empty($resttime)) {
+                $stayTime = $startWork->diffInSeconds($endwork);
+                $workingTimeSeconds = floor($stayTime % 60);
+                $workingTimeMinutes = floor(($stayTime % 3600) / 60);
+                $workingTimeHours = floor($stayTime / 3600);
+                $workTime = $workingTimeHours . ':' . $workingTimeMinutes . ':' . $workingTimeSeconds;
+
+                $timework->update([
+                    'end_work' => $endwork,
+                    'worktime' => $workTime,
+                    'breaktime' => '00:00:00'
+                ]);
+
+
+                $today = new Carbon('today');
+                $stayTime = $today->diffInSeconds($now);
+                $workingTimeSeconds = floor($stayTime % 60);
+                $workingTimeMinutes = floor(($stayTime % 3600) / 60);
+                $workingTimeHours = floor($stayTime / 3600);
+                $workTime = $workingTimeHours . ':' . $workingTimeMinutes . ':' . $workingTimeSeconds;
+
+                $timework = Time::create([
+                    'user_id' => $user->id,
+                    'date' => Carbon::now(),
+                    'start_work' => $now->startOfDay(),
+                    'end_work' => Carbon::now(),
+                    'worktime' => $workTime,
+                    'breaktime' => '00:00:00'
+                ]);
+
+                return redirect('/');
+            }
+            
+            $carbontime = Carbon::createFromFormat('H:i:s', $resttime);
+            $seconds = $carbontime->hour * 3600 + $carbontime->minute * 60 + $carbontime->second;
+
+            $stayingTime = $startWork->diffInSeconds($endwork); 
+            $stayTime = $stayingTime - $seconds; 
+            $workingTimeSeconds = floor($stayTime % 60);
+            $workingTimeMinutes = floor(($stayTime % 3600) / 60);
+            $workingTimeHours = floor($stayTime / 3600);
+            $workTime = $workingTimeHours . ':' . $workingTimeMinutes . ':' . $workingTimeSeconds;
+           
+            $timework->update([
+                'end_work' => $endwork,
+                'worktime' => $workTime
+            ]);
+
+            $today = new Carbon('today');
+            $stayingTime = $today->diffInSeconds($now);  
+            $workingTimeSeconds = floor($stayingTime % 60);
+            $workingTimeMinutes = floor(($stayingTime % 3600) / 60);
+            $workingTimeHours = floor($stayingTime / 3600);
+            $workTime = $workingTimeHours . ':' . $workingTimeMinutes . ':' . $workingTimeSeconds;
+            
+            $timework = Time::create([
+                'user_id' => $user->id,
+                'date' => Carbon::now(),
+                'start_work' => $now->startOfDay(),
+                'end_work' => Carbon::now(),
+                'breaktime' => '00:00:00',
+                'worktime' => $workTime
+            ]);
+           
+            return redirect('/');
+        }
+           
         $rest = Rest::selectRaw('SEC_TO_TIME(SUM(TIME_TO_SEC(resttime))) as totalresttime')
             ->where('time_id', $time->id)->first();
         $resttime = $rest->totalresttime;

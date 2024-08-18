@@ -2,7 +2,7 @@
     margin: 0 auto;
     padding: 30px 15px;
     max-width: 1230px;
-  }
+}
   
 .register-form__heading {
   margin-bottom: 20px;
@@ -35,7 +35,6 @@
   height: 40px;
   border: 2px solid #ddd;
   border-radius: 3px;
-
   appearance: none;
 }
 
